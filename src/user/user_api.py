@@ -1,40 +1,4 @@
-from flask import Flask, request, jsonify
-import mysql.connector
-
-
-app = Flask(__name__)
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="my_database",
-    port=3307,
-)
-
-
-mycursor = mydb.cursor()
-
-# mycursor.execute(
-#     "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255))"
-# )
-# sql = "INSERT INTO users (name, email) VALUES (%s, %s)"
-# val = [
-#     ('John', 'huanvip2kk@gmail.com'),
-#     ('John', 'huanvip2kk@gmail.com'),
-#     ('John', 'huanvip2kk@gmail.com'),
-#     ('John', 'huanvip2kk@gmail.com'),
-#     ('John', 'huanvip2kk@gmail.com'),
-#     ('John', 'huanvip2kk@gmail.com'),
-#     ('John', 'huanvip2kk@gmail.com'),
-# ]
-# mycursor.executemany(sql, val)
-
-# mydb.commit()
-
-
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+from src.core.connect import *
 
 
 @app.route("/get-users")
@@ -98,12 +62,8 @@ def updateUser(userId):
     email = data["email"]  # Access the 'email' field from the JSON data
 
     mycursor.execute(
-        "update  users set (name, email) values (%s, %s) where id = %s",
+        "UPDATE users SET name = %s, email = %s WHERE id = %s",
         (name, email, userId),
     )
     mydb.commit()
     return jsonify(data), 200
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
