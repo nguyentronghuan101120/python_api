@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
-import common_response
+from core.common_response import BaseResponseModel
 import mysql.connector
-
+import sys
 
 app = Flask(__name__)
 mydb = mysql.connector.connect(
@@ -21,7 +21,7 @@ def getUsers():
     mycursor.execute("select * from users")
     myresult = mycursor.fetchall()
 
-    return jsonify(myresult), 200
+    return BaseResponseModel(data=jsonify(myresult))
 
 
 @app.route("/get-user")
@@ -109,7 +109,7 @@ def register():
     # data = request.get_json()
     
     # if not data:
-    return common_response.success_response()
+    return common_response.success_response(message="Success", data={"key": "value"})
 
 if __name__ == "__main__":
     app.run(debug=True)
